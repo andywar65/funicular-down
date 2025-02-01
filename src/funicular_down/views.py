@@ -20,5 +20,5 @@ class GetStatusTemplateView(TemplateView):
         try:
             context["status"] = r.json()
         except JSONDecodeError:
-            context["status"] = "JSON decode error"
+            context["status"] = f"JSON encode error - {r.text}"
         return context
