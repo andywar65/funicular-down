@@ -1,3 +1,5 @@
-from django.shortcuts import render  # noqa
+from django.views.generic import TemplateView
 
-# Create your views here.
+
+class ControlTemplateView(TemplateView):
+    template_name = "funicular_down/control.html"
