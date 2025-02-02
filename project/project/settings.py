@@ -128,8 +128,7 @@ STATIC_ROOT = env.str("STATIC_ROOT")
 MEDIA_ROOT = env.str("MEDIA_ROOT")
 
 FUNICULAR_HOST = env.str("FUNICULAR_HOST")
-FUNICULAR_USER = env.str("FUNICULAR_USER")
-FUNICULAR_PWD = env.str("FUNICULAR_PWD")
+FUNICULAR_TOKEN = env.str("FUNICULAR_TOKEN")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

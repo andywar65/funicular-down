@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 
 
 class Entry(models.Model):
-    id_up = models.PositiveBigIntegerField(editable=False)
+    id_up = models.PositiveBigIntegerField(editable=False, unique=True)
     image = models.ImageField(_("Image"), upload_to="funicular/")
 
     class Meta:

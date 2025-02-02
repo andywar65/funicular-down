@@ -12,10 +12,11 @@ class GetStatusTemplateView(TemplateView):
     template_name = "funicular_down/control.html"
 
     def get_context_data(self, **kwargs):
+        headers = {"Authorization": f"Token {settings.FUNICULAR_TOKEN}"}
         context = super().get_context_data(**kwargs)
         r = requests.get(
             f"{settings.FUNICULAR_HOST}/pics/status/",
-            auth=(settings.FUNICULAR_USER, settings.FUNICULAR_PWD),
+            headers=headers,
         )
         try:
             context["status"] = r.json()
