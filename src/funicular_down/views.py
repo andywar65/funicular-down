@@ -3,6 +3,7 @@ from io import BytesIO
 import requests
 from django.conf import settings
 from django.core.files import File
+from django.db import IntegrityError
 from django.views.generic import TemplateView
 from requests.exceptions import JSONDecodeError
 
@@ -35,7 +36,10 @@ class GetStatusTemplateView(TemplateView):
             )
             e = Entry()
             e.id_up = int(id)
-            e.image.save(name, File(BytesIO(r.content)))
-            e.save()
-            context["status"] += f"Created {id} - {name}\n"
+            e.image.save(name, File(BytesIO(r.content)), save=False)
+            try:
+                e.save()
+                context["status"] += f"Created {id} - {name}\n"
+            except IntegrityError:
+                context["status"] += f"Not Created {id} - {name}\n"
         return context
