@@ -19,7 +19,12 @@ class GetStatusTemplateView(TemplateView):
             headers=headers,
         )
         try:
-            context["status"] = r.json()
+            uploaded = r.json()
         except JSONDecodeError:
             context["status"] = f"JSON encode error - {r.text}"
+        for id, url in uploaded.items():
+            r = requests.get(
+                f"{settings.FUNICULAR_HOST}{url}",
+            )
+        context["status"] = uploaded
         return context
