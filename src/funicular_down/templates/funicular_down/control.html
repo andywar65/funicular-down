@@ -4,7 +4,7 @@
   <h2>Control</h2>
   <a href="{% url 'funicular_down:status' %}">Get status</a>
   {% if status %}
-    <p>{{ status }}</p>
+    {{ status|safe }}
   {% else %}
     <p>No status yet</p>
   {% endif %}

@@ -28,7 +28,7 @@ class GetStatusTemplateView(TemplateView):
         try:
             uploaded = r.json()
         except JSONDecodeError:
-            context["status"] = f"JSON encode error - {r.text}"
+            context["status"] = f"<p>JSON encode error - {r.text}</p>"
         for id, url in uploaded.items():
             name = url.split("/")[-1]
             r = requests.get(
@@ -39,7 +39,19 @@ class GetStatusTemplateView(TemplateView):
             e.image.save(name, File(BytesIO(r.content)), save=False)
             try:
                 e.save()
-                context["status"] += f"Created {id} - {name}\n"
+                context["status"] += f"<p>Downloaded {id} - {name}</p>"
+                downloaded = True
             except IntegrityError:
-                context["status"] += f"Not Created {id} - {name}\n"
+                context["status"] += f"<p>Already downloaded {id}</p>"
+                downloaded = False
+            if downloaded:
+                r = requests.get(
+                    f"{settings.FUNICULAR_HOST}/pics/entry/{id}/downloaded/",
+                    headers=headers,
+                )
+                try:
+                    deleted = r.json()  # noqa
+                    context["status"] += f"<p>Deleted {id} on server</p>"
+                except JSONDecodeError:
+                    context["status"] += f"<p>JSON encode error - {r.text}</p>"
         return context
