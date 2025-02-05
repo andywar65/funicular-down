@@ -50,8 +50,8 @@ class GetStatusTemplateView(TemplateView):
                     headers=headers,
                 )
                 try:
-                    deleted = r.json()  # noqa
-                    context["status"] += f"<p>Deleted {id} on server</p>"
+                    message = r.json()  # noqa
+                    context["status"] += f"<p>{message["text"]}</p>"
                 except JSONDecodeError:
                     context["status"] += f"<p>JSON encode error - {r.text}</p>"
         return context
