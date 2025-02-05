@@ -10,10 +10,6 @@ from requests.exceptions import JSONDecodeError
 from .models import Entry
 
 
-class ControlTemplateView(TemplateView):
-    template_name = "funicular_down/control.html"
-
-
 class GetStatusTemplateView(TemplateView):
     template_name = "funicular_down/control.html"
 
@@ -39,10 +35,10 @@ class GetStatusTemplateView(TemplateView):
             e.image.save(name, File(BytesIO(r.content)), save=False)
             try:
                 e.save()
-                context["status"] += f"<p>Downloaded {id} - {name}</p>"
+                context["status"] += f"<p>Downloaded image {id} - {name}</p>"
                 downloaded = True
             except IntegrityError:
-                context["status"] += f"<p>Already downloaded {id}</p>"
+                context["status"] += f"<p>Already downloaded image {id}</p>"
                 downloaded = False
             if downloaded:
                 r = requests.get(
@@ -50,7 +46,7 @@ class GetStatusTemplateView(TemplateView):
                     headers=headers,
                 )
                 try:
-                    message = r.json()  # noqa
+                    message = r.json()
                     context["status"] += f"<p>{message["text"]}</p>"
                 except JSONDecodeError:
                     context["status"] += f"<p>JSON encode error - {r.text}</p>"
