@@ -50,7 +50,7 @@ def get_status_from_server():
                 downloaded = False
             if downloaded:
                 r = requests.get(
-                    f"{settings.FUNICULAR_HOST}/pics/entry/{id}/downloaded/",
+                    f"{settings.FUNICULAR_HOST}/pics/entry/{id}/download/",
                     headers=headers,
                 )
                 try:
@@ -60,7 +60,7 @@ def get_status_from_server():
                     status += f"<p>JSON encode error - {r.text}</p>"
         elif data["status"] == "KI":
             r = requests.get(
-                f"{settings.FUNICULAR_HOST}/pics/entry/{id}/downloaded/",
+                f"{settings.FUNICULAR_HOST}/pics/entry/{id}/download/",
                 headers=headers,
             )
             try:
@@ -72,7 +72,7 @@ def get_status_from_server():
             entry = get_object_or_404(Entry, id_up=id)
             files = {"file": open(entry.image.path, "rb")}
             r = requests.put(
-                f"{settings.FUNICULAR_HOST}/pics/entry/{id}/uploaded/",
+                f"{settings.FUNICULAR_HOST}/pics/entry/{id}/upload/",
                 files=files,
                 data={"status": "ST"},
                 headers=headers,
