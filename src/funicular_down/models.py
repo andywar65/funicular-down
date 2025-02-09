@@ -70,12 +70,22 @@ def get_status_from_server():
                 status += f"<p>JSON encode error - {r.text}</p>"
         elif data["status"] == "RQ":
             entry = get_object_or_404(Entry, id_up=id)
-            files = {"file": open(entry.image.path, "rb")}
-            r = requests.put(
-                f"{settings.FUNICULAR_HOST}/pics/entry/{id}/upload/",
-                files=files,
-                data={"status": "ST"},
-                headers=headers,
-            )
+            name = entry.image.url.split("/")[-1]
+            ext = name.split(".")[1]
+            with open(entry.image.path, "rb") as image_file:
+                files = {"image": (name, image_file, f"image/{ext}")}
+                r = requests.put(
+                    f"{settings.FUNICULAR_HOST}/pics/entry/{id}/upload/",
+                    files=files,
+                    headers=headers,
+                )
+            try:
+                message = r.json()
+                if "text" in message:
+                    status += f"<p>{message["text"]}</p>"
+                else:
+                    status += f"<p>{message}</p>"
+            except JSONDecodeError:
+                status += f"<p>JSON encode error - {r.text}</p>"
 
     return status
