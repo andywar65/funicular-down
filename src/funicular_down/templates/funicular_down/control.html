@@ -1,6 +1,6 @@
-{% extends "base.html" %}
+{% extends "base_app.html" %}
 
-{% block content %}
+{% block fud-content %}
   <h2>Check available images</h2>
   <a href="{% url 'funicular_down:check' %}">Retry</a>
   {% if status %}
@@ -8,4 +8,4 @@
   {% else %}
     <p>No available images yet</p>
   {% endif %}
-{% endblock content %}
+{% endblock fud-content %}
