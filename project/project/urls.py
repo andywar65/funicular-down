@@ -23,7 +23,7 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", RedirectView.as_view(pattern_name="funicular_down:check")),
+    path("", RedirectView.as_view(pattern_name="funicular_down:home")),
     path("pics/", include("funicular_down.urls", namespace="funicular_down")),
 ]
 

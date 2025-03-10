@@ -3,6 +3,10 @@ from django.views.generic import TemplateView
 from .models import get_status_from_server
 
 
+class BaseTemplateView(TemplateView):
+    template_name = "funicular_down/base_app.html"
+
+
 class GetStatusTemplateView(TemplateView):
     template_name = "funicular_down/control.html"
 
