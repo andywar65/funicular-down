@@ -1,11 +1,7 @@
-{% extends "funicular_down/base_app.html" %}
-
-{% block fud-content %}
-  <h2>Check available images</h2>
-  <a href="{% url 'funicular_down:check' %}">Retry</a>
-  {% if status %}
-    {{ status|safe }}
-  {% else %}
-    <p>No available images yet</p>
-  {% endif %}
-{% endblock fud-content %}
+<div id="replace-me"></div>
+{% now "Y m d G:i:s" %}
+{% if status %}
+  {{ status|safe }}
+{% else %}
+  <p>No available images yet</p>
+{% endif %}

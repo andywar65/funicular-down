@@ -3,8 +3,12 @@
 
 {% block content %}
   <div id="fud-content" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-    {% block fud-content %}
-    {% endblock fud-content %}
+    <h2>Check available images</h2>
+    <a hx-get="{% url 'funicular_down:check' %}"
+       hx-trigger="every 10s"
+       hx-target="#replace-me"
+       hx-swap="outerHTML"></a>
+    <div id="replace-me"></div>
   </div>
 {% endblock content %}
 {% block extra-js %}
