@@ -9,7 +9,22 @@ from django.utils.translation import gettext_lazy as _
 from requests.exceptions import JSONDecodeError
 
 
+class Server(models.Model):
+    url = models.URLField(_("Address"))
+    token = models.CharField(_("Token Key"), max_length=40)
+
+    class Meta:
+        verbose_name = _("Server")
+        verbose_name_plural = _("Servers")
+
+    def __str__(self):
+        return self.url
+
+
 class Entry(models.Model):
+    server = models.ForeignKey(
+        Server, verbose_name=_("Server"), editable=False, on_delete=models.CASCADE
+    )
     id_up = models.PositiveBigIntegerField(editable=False, unique=True)
     image = models.ImageField(_("Image"), upload_to="funicular/")
 
