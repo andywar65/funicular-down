@@ -12,6 +12,7 @@ from requests.exceptions import JSONDecodeError
 class Server(models.Model):
     url = models.URLField(_("Address"))
     token = models.CharField(_("Token Key"), max_length=40)
+    active = models.BooleanField(_("Active"), default=True)
 
     class Meta:
         verbose_name = _("Server")
@@ -37,6 +38,8 @@ class Entry(models.Model):
 
 
 def get_status_from_server():
+    for server in Server.objects.all():
+        pass
     headers = {"Authorization": f"Token {settings.FUNICULAR_TOKEN}"}
     status = ""
     r = requests.get(
