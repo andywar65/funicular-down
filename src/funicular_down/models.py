@@ -25,12 +25,21 @@ class Entry(models.Model):
     server = models.ForeignKey(
         Server, verbose_name=_("Server"), editable=False, on_delete=models.CASCADE
     )
-    id_up = models.PositiveBigIntegerField(editable=False, unique=True)
+    id_up = models.PositiveBigIntegerField(editable=False)
     image = models.ImageField(_("Image"), upload_to="funicular/")
 
     class Meta:
         verbose_name = _("Entry")
         verbose_name_plural = _("Entries")
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    "server",
+                    "id_up",
+                ],
+                name="unique_server_to_id",
+            ),
+        ]
 
     def __str__(self):
         return f"Entry - {self.id}"
@@ -56,6 +65,7 @@ def get_status_from_server(server):
                 f"{server.url}{data["url"]}",
             )
             e = Entry()
+            e.server = server
             e.id_up = int(id)
             e.image.save(name, File(BytesIO(r.content)), save=False)
             try:
