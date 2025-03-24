@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from .models import get_status_from_server
+from .models import Server, get_status_from_server
 
 
 class BaseTemplateView(TemplateView):
@@ -12,5 +12,7 @@ class GetStatusTemplateView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["status"] = get_status_from_server()
+        context["status"] = {}
+        for server in Server.objects.filter(active=True):
+            context["status"][server] = get_status_from_server(server)
         return context

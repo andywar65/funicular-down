@@ -1,7 +1,6 @@
 from io import BytesIO
 
 import requests
-from django.conf import settings
 from django.core.files import File
 from django.db import IntegrityError, models
 from django.shortcuts import get_object_or_404
@@ -37,13 +36,11 @@ class Entry(models.Model):
         return f"Entry - {self.id}"
 
 
-def get_status_from_server():
-    for server in Server.objects.all():
-        pass
-    headers = {"Authorization": f"Token {settings.FUNICULAR_TOKEN}"}
+def get_status_from_server(server):
+    headers = {"Authorization": f"Token {server.token}"}
     status = ""
     r = requests.get(
-        f"{settings.FUNICULAR_HOST}/pics/status/",
+        f"{server.url}/pics/status/",
         headers=headers,
     )
     try:
@@ -51,10 +48,12 @@ def get_status_from_server():
     except JSONDecodeError:
         status = f"<p>JSON encode error - {r.text}</p>"
     for id, data in uploaded.items():
+        if data == "Invalid token.":
+            return "Invalid token"
         if data["status"] == "UP":
             name = data["url"].split("/")[-1]
             r = requests.get(
-                f"{settings.FUNICULAR_HOST}{data["url"]}",
+                f"{server.url}{data["url"]}",
             )
             e = Entry()
             e.id_up = int(id)
@@ -68,7 +67,7 @@ def get_status_from_server():
                 downloaded = False
             if downloaded:
                 r = requests.get(
-                    f"{settings.FUNICULAR_HOST}/pics/entry/{id}/download/",
+                    f"{server.url}/pics/entry/{id}/download/",
                     headers=headers,
                 )
                 try:
@@ -78,7 +77,7 @@ def get_status_from_server():
                     status += f"<p>JSON encode error - {r.text}</p>"
         elif data["status"] == "KI":
             r = requests.get(
-                f"{settings.FUNICULAR_HOST}/pics/entry/{id}/download/",
+                f"{server.url}/pics/entry/{id}/download/",
                 headers=headers,
             )
             try:
@@ -93,7 +92,7 @@ def get_status_from_server():
             with open(entry.image.path, "rb") as image_file:
                 files = {"image": (name, image_file, f"image/{ext}")}
                 r = requests.put(
-                    f"{settings.FUNICULAR_HOST}/pics/entry/{id}/upload/",
+                    f"{server.url}/pics/entry/{id}/upload/",
                     files=files,
                     headers=headers,
                 )

@@ -1,7 +1,9 @@
 <div id="replace-me"></div>
-{% now "G:i:s Y-m-d" %}
 {% if status %}
-  {{ status|safe }}
+  <br>{% now "G:i:s Y-m-d" %}
+  {% for server, message in status.items %}
+    <br>{{ server }}: {{ message|safe }}
+  {% endfor %}
 {% else %}
   <p>No available images yet</p>
 {% endif %}
